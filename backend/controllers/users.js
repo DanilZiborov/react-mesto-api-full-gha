@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const { MongooseError } = require('mongoose');
 const User = require('../models/user');
 const { STATUS_CODES } = require('../utils/STATUS_CODES');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 const {
   NotFoundError, ConflictError, InternalServerError, BadRequestError,
 } = require('../utils/errors/errors');
@@ -70,7 +72,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'top-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.status(STATUS_CODES.OK).send({ token });
     })
     .catch(next);
