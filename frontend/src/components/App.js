@@ -38,31 +38,37 @@ function App() {
   const [isRegisterSuccess, setIsRegisterSuccess] = React.useState(true);
   const [email, setEmail] = React.useState('');
 
+
   React.useEffect(
     () => {
-        handleTokenCheck();
+      if (localStorage.getItem('jwt')) {
+        const token = localStorage.getItem('jwt');
+        api.getUserInfo(token)
+          .then((res) => {
+            setIsLoggedIn(true);
+            setEmail(res.data.email);
+            navigate('/', { replace: true });
+            setCurrentUser(res.data);
+          })
+          .catch(err => {
+            console.error(`Проблема c загрузкой информации пользователя, ${err}`);
+          });
+      }
+
     }, []);
 
   React.useEffect(
     () => {
       if (isLoggedIn === true) {
-        api.getUserInfo()
+        const token = localStorage.getItem('jwt');
+        api.getInitialCards(token)
           .then((res) => {
-            setCurrentUser(res);
-          })
-          .catch(err => {
-            console.error(`Проблема c загрузкой информации пользователя, ${err}`);
-          });
-
-        api.getInitialCards()
-          .then((res) => {
-            setCards(res);
+            setCards(res.data);
           })
           .catch(err => {
             console.error(`Проблема c загрузкой начальных карточек, ${err}`);
           });
       }
-
     }, [isLoggedIn]);
 
   function handleCardClick(card) {
@@ -70,11 +76,11 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-
-    api.changeLikeCardStatus(card._id, isLiked)
-      .then((newCard) => {
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+    const isLiked = card.likes.some(like => like === currentUser._id);
+    const token = localStorage.getItem('jwt');
+    api.changeLikeCardStatus(card._id, isLiked, token)
+      .then((res) => {
+        setCards((state) => state.map((c) => c._id === card._id ? res.data : c));
       })
       .catch(err => {
         console.error(`Проблема c лайком карточки, ${err}`);
@@ -87,7 +93,8 @@ function App() {
 
   function handleDeleteCard() {
     setIsPopupLoading(true);
-    api.deleteCard(cardToDelete._id)
+    const token = localStorage.getItem('jwt');
+    api.deleteCard(cardToDelete._id, token)
       .finally(() => setIsPopupLoading(false))
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== cardToDelete._id));
@@ -100,10 +107,11 @@ function App() {
 
   function handleUpdateUser(userInfo) {
     setIsPopupLoading(true);
-    api.editUserInfo(userInfo)
+    const token = localStorage.getItem('jwt');
+    api.editUserInfo(userInfo, token)
       .finally(() => setIsPopupLoading(false))
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch(err => {
@@ -113,10 +121,11 @@ function App() {
 
   function handleUpdateAvatar(avatar) {
     setIsPopupLoading(true);
-    api.changeAvatar(avatar)
+    const token = localStorage.getItem('jwt');
+    api.changeAvatar(avatar, token)
       .finally(() => setIsPopupLoading(false))
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch(err => {
@@ -126,10 +135,11 @@ function App() {
 
   function handleAddPlaceSubmit({ name, link }) {
     setIsPopupLoading(true);
-    api.addNewCard({ name, link })
+    const token = localStorage.getItem('jwt');
+    api.addNewCard({ name, link }, token)
       .finally(() => setIsPopupLoading(false))
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
+      .then((res) => {
+        setCards([res.data, ...cards]);
         closeAllPopups();
       })
       .catch(err => {
@@ -170,31 +180,19 @@ function App() {
         if (res.token) {
           localStorage.setItem('jwt', res.token);
           setIsLoggedIn(true);
-          setEmail(email);
-          navigate('/', { replace: true });
-
         }
+        const token = localStorage.getItem('jwt', res.token);
+        api.getUserInfo(token)
+          .then((res) => {
+            setEmail(res.data.email);
+            navigate('/', { replace: true });
+            setCurrentUser(res.data);
+          })
       })
       .catch((err) => {
-        console.error(err);
+        console.error(`${err} не удалось выполнить вход`);
       })
-  }
 
-  function handleTokenCheck() {
-    console.log('чекание токена');
-    if (localStorage.getItem('jwt')) {
-
-      const token = localStorage.getItem('jwt');
-      apiAuth.checkToken(token)
-        .then(res => {
-          setIsLoggedIn(true);
-          setEmail(res.data.email);
-          navigate('/', { replace: true });
-        })
-        .catch(err => {
-          console.error(err);
-        })
-    }
   }
 
   function handleSignOut() {
@@ -234,7 +232,7 @@ function App() {
 
           <Route path="/signin" element={<Login onSignIn={handleSignIn} />} />
           <Route path="/signup" element={<Register onSignUp={handleSignUp} />} />
-          <Route path="*" element={<Navigate to="/signin" replace={true}/>} />
+          <Route path="*" element={<Navigate to="/signin" replace={true} />} />
 
 
         </Routes>

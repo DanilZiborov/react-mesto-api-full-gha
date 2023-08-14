@@ -7,7 +7,7 @@ class ApiAuth {
     if (res.ok) {
       return res.json();
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return Promise.reject(`Ошибка ${res.status}:`);
   }
 
   _request(url, options) {
@@ -31,16 +31,6 @@ class ApiAuth {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ password, email })
-    })
-  }
-
-  checkToken(token) {
-    return this._request(`${this._baseUrl}/users/me`, {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`
-      }
     })
   }
 

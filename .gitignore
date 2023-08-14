@@ -18,4 +18,5 @@ backend/.DS_Store
 backend/.idea
 backend/.vscode
 
-backend/*.log 
+backend/*.log
+backend/.env
