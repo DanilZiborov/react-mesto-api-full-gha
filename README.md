@@ -9,8 +9,8 @@
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 158.160.110.136
 
-Frontend https://...
+Frontend https://mestoprojectdvz.nomoreparties.co/
 
-Backend https://...
+Backend https://api.mestoprojectdvz.nomoreparties.co/
