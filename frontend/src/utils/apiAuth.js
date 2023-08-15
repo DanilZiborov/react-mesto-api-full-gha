@@ -37,6 +37,6 @@ class ApiAuth {
 
 }
 
-const apiAuth = new ApiAuth({ baseUrl: 'http://localhost:3001' })
+const apiAuth = new ApiAuth({ baseUrl: 'https://api.mestoprojectdvz.nomoreparties.co' })
 
 export default apiAuth;
