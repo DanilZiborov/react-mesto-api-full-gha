@@ -14,4 +14,3 @@ IP-адрес 158.160.110.136
 Frontend https://mestoprojectdvz.nomoreparties.co/
 
 Backend https://api.mestoprojectdvz.nomoreparties.co/
-лалала
