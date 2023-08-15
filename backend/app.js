@@ -13,7 +13,7 @@ const { NotFoundError } = require('./utils/errors/errors');
 const { userAuthValidator } = require('./utils/validators');
 
 const { DB_ADRESS } = process.env;
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 mongoose.connect(DB_ADRESS);
 
 const app = express();
