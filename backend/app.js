@@ -12,7 +12,7 @@ const { NotFoundError } = require('./utils/errors/errors');
 
 const { userAuthValidator } = require('./utils/validators');
 
-const { DB_ADRESS } = process.env;
+const { DB_ADRESS = 'mongodb://127.0.0.1/mestodb' } = process.env;
 const { PORT = 3000 } = process.env;
 mongoose.connect(DB_ADRESS);
 
