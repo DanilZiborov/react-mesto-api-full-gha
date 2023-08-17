@@ -47,7 +47,7 @@
 #### 🔬 Стек технологий (бэк) :
 - NodeJS: express.js, mongoose, joi
 - MongoDB,
-- nginx, pm2, 
+- nginx, pm2 
 
 Адрес репозитория: [https://github.com/...](https://github.com/DanilZiborov/react-mesto-api-full-gha)
 
