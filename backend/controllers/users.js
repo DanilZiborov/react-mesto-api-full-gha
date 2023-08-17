@@ -6,7 +6,7 @@ const { STATUS_CODES } = require('../utils/STATUS_CODES');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const {
-  NotFoundError, ConflictError, InternalServerError, BadRequestError,
+  NotFoundError, ConflictError, BadRequestError,
 } = require('../utils/errors/errors');
 
 module.exports.getUsers = (req, res, next) => {
@@ -43,7 +43,7 @@ module.exports.createUser = (req, res, next) => {
           next(new BadRequestError(err.message));
         } else if (err.code === 11000) {
           next(new ConflictError('Этот email уже используется'));
-        } else { next(new InternalServerError('На сервере произошла ошибка')); }
+        } else { next(err); }
       }));
 };
 

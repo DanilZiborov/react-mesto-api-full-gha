@@ -7,7 +7,8 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new UnauthorizedError('Ошибка авторизации: отсутствует токен');
+    next(new UnauthorizedError('Ошибка авторизации: отсутствует токен'));
+    return;
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -21,5 +22,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload;
 
-  return next(); // пришлось указать return, т.к ругается линтер
+  next();
 };

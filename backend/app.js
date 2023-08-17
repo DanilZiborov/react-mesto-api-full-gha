@@ -10,7 +10,7 @@ const { createUser } = require('./controllers/users');
 
 const { NotFoundError } = require('./utils/errors/errors');
 
-const { userAuthValidator } = require('./utils/validators');
+const { userSignInValidator, userSignUpValidator } = require('./utils/validators');
 
 const { DB_ADRESS = 'mongodb://127.0.0.1/mestodb' } = process.env;
 const { PORT = 3000 } = process.env;
@@ -32,8 +32,8 @@ app.get('/crash-test', () => {
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.post('/signin', celebrate(userAuthValidator), login);
-app.post('/signup', celebrate(userAuthValidator), createUser);
+app.post('/signin', celebrate(userSignInValidator), login);
+app.post('/signup', celebrate(userSignUpValidator), createUser);
 
 app.use((req, res, next) => {
   const err = new NotFoundError('Ресурс не найден');
@@ -47,7 +47,6 @@ app.use(errors());
 // тут линтер ругается, но, как я понял, четыре аргумента обязательны для обработчика ошибки
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  // console.log(err);
   const { statusCode = 500, message } = err;
   res
     .status(statusCode)

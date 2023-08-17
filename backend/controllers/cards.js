@@ -17,8 +17,11 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .then((card) => {
       if (card.owner._id.valueOf() === req.user._id) {
-        Card.deleteOne({ _id: req.params.cardId })
-          .then((deletedCard) => res.send({ data: deletedCard }));
+        // не получилось сделать через return, поэтому добавил блок catch,
+        // чтобы ошибка БД при удалении карточки уходила глобальному обработчику
+        card.deleteOne()
+          .then(() => res.send({ message: 'Карточка успешно удалена' }))
+          .catch(next);
       } else {
         throw new ForbiddenError('Отказано в доступе: удалять можно только свои карточки');
       }
