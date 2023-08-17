@@ -8,10 +8,8 @@ const userSignInRules = {
 const userSignUpRules = {
   email: Joi.string().required().email(),
   password: Joi.string().required().min(8),
-  name: Joi.string().min(2).max(30).default('Жак-Ив Кусто')
-    .required(),
-  about: Joi.string().min(2).max(30).default('Исследователь')
-    .required(),
+  name: Joi.string().min(2).max(30).default('Жак-Ив Кусто'),
+  about: Joi.string().min(2).max(30).default('Исследователь'),
   avatar: Joi.string().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*$/im).default('https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png').required(),
 };
 
