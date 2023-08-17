@@ -34,11 +34,11 @@ const cardRules = {
 const objectIdRule = Joi.string().hex().length(24).required();
 
 module.exports.userSignInValidator = {
-  body: Joi.object().keys({ userSignInRules }).unknown(true),
+  body: Joi.object().keys(userSignInRules).unknown(true),
 };
 
 module.exports.userSignUpValidator = {
-  body: Joi.object().keys({ userSignUpRules }).unknown(true),
+  body: Joi.object().keys(userSignUpRules).unknown(true),
 };
 
 module.exports.userDataValidator = {
