@@ -17,7 +17,8 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
-    throw new UnauthorizedError('Ошибка авторизации: некорректный токен');
+    next(new UnauthorizedError('Ошибка авторизации: некорректный токен'));
+    return;
   }
 
   req.user = payload;
